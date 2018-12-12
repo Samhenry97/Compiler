@@ -1,0 +1,39 @@
+class Answer is
+	
+	start() is
+	n := in.readint()
+	s1: String
+	s2: String
+	idx := 0
+	good := true
+	sub := ""
+	begin
+		loop while n > 0
+			s1 := in.read()
+			s2 := in.read()
+
+			if s1.size() != s2.size() then
+				good := false
+			else
+				loop while idx < s1.size()
+					sub := s1.substring(idx, 1)
+					if not (sub.eq("a") or sub.eq("e") or sub.eq("i") or sub.eq("o") or sub.eq("u")) and (s1.charAt(idx) != s2.charAt(idx)) then
+						good := false
+					end if
+					idx := idx + 1
+				end loop
+			end if
+
+			if good then
+				out.writeln("Yes")
+			else
+				out.writeln("No")
+			end if
+
+			idx := 0
+			good := true
+			n := n - 1
+		end loop
+	end start
+
+end Answer

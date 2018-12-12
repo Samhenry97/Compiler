@@ -1,0 +1,1019 @@
+~ ---------------------------------------------------------
+~ File: stdlib.floyd
+~ An implementation of the Floyd Predefined classes
+~ ---------------------------------------------------------
+
+class Oyd is
+  toString(): string is
+  begin
+    toString := "none"
+  end toString
+
+  val(): Oyd is
+  begin
+    val := null
+  end val
+
+  eq(other: Oyd): boolean is
+  begin
+    eq := true
+  end eq
+
+  neq(other: Oyd): boolean is
+  begin
+    neq := not eq(other)
+  end neq
+
+  _lt_(other: Oyd): boolean is
+  begin
+    _lt_ := true
+  end _lt_
+
+  _lteq_(other: Oyd): boolean is
+  begin
+    _lteq_ := _lt_(other) or eq(other)
+  end _lteq_
+
+  _gteq_(other: Oyd): boolean is
+  begin
+    _gteq_ := not _lt_(other)
+  end _gteq_
+
+  _gt_(other: Oyd): boolean is
+  begin
+    _gt_ := not _lteq_(other)
+  end _gt_
+
+  _and_(other: Oyd): boolean is
+  begin
+    _and_ := false
+  end _and_
+
+  _or_(other: Oyd): boolean is
+  begin
+    _or_ := false
+  end _or_
+
+  _add_(other: Oyd): Oyd is
+  begin
+    _add_ := null
+  end _add_
+
+  _sub_(other: Oyd): Oyd is
+  begin
+    _sub_ := null
+  end _sub_
+
+  _mul_(other: Oyd): Oyd is
+  begin
+    _mul_ := null
+  end _mul_
+
+  _div_(other: Oyd): Oyd is
+  begin
+    _div_ := null
+  end _div_
+
+  _cat_(other: Oyd): Oyd is
+  begin
+    _cat_ := null
+  end _cat_
+
+  _idx_(val: Oyd): Oyd is
+  begin
+    _idx_ := null
+  end _idx_
+end Oyd
+
+
+~ ********************************************
+~ An implementation of the Array class
+~
+~ Used for actual arrays in the Floyd language
+~ ********************************************
+
+class Array is
+
+end Array
+
+
+~ ********************************************
+~ An implementation of an IntVector class
+~
+~ This version only supports integers
+~ Used for dynamically sized arrays
+~ ********************************************
+
+class IntVector is
+  data := new int[4]
+  last := 0
+  alloc := 4
+
+  size(): int is
+  begin
+    size := last
+  end size
+
+  getData(): int[] is
+  begin
+    getData := data
+  end getData
+
+  resize(allocSize: int): IntVector is
+  idx := 0
+  tmp := new int[allocSize]
+  begin
+    loop while not (idx >= last)
+      tmp[idx] := data[idx]
+      idx := idx + 1
+    end loop
+
+    data := tmp
+
+    resize := me
+  end resize
+
+  push_back(x: int): IntVector is
+  begin
+    if last >= alloc then
+      alloc := alloc * 2
+      resize(alloc)
+    end if
+    data[last] := x
+    last := last + 1
+    push_back := me
+  end push_back
+
+  init(newData: int[]; newLast: int): IntVector is
+  idx := 0
+  begin
+    loop while idx < newLast
+      push_back(newData[idx])
+      idx := idx + 1
+    end loop
+
+    init := me
+  end init
+
+  reserve(allocSize: int): IntVector is
+  begin
+    last := 0
+    alloc := allocSize
+    data := new int[alloc]
+
+    reserve := me
+  end reserve
+
+  copy(): IntVector is
+  begin
+    copy := new IntVector.init(data, last)
+  end copy
+
+  at(idx: int): int is
+  begin
+    at := data[idx]
+  end at
+
+  insert(x: IntVector): IntVector is
+  idx := 0
+  last := x.size()
+  begin
+    loop while idx < last
+      push_back(x.at(idx))
+      idx := idx + 1
+    end loop
+
+    insert := me
+  end insert
+
+  partition(low: int; high: int): int is
+  pivot := data[high]
+  i := low - 1
+  j := low
+  tmp: int
+  begin
+    loop while not (j > high - 1)
+      if not (data[j] > pivot) then
+        i := i + 1
+        tmp := data[i]
+        data[i] := data[j]
+        data[j] := tmp
+      end if
+      j := j + 1
+    end loop
+
+    tmp := data[i + 1]
+    data[i + 1] := data[high]
+    data[high] := tmp
+
+    partition := i + 1
+  end partition
+
+  quicksort(low: int; high: int): IntVector is
+  pivot: int
+  begin
+    if not (low >= high) then
+      pivot := partition(low, high)
+      quicksort(low, pivot - 1)
+      quicksort(pivot + 1, high)
+    end if
+
+    quicksort := me
+  end quicksort
+
+  sort(): IntVector is
+  begin
+    sort := quicksort(0, last - 1)
+  end sort
+end IntVector
+
+~ ********************************************
+~ An implementation of a Vector class
+~
+~ This is for any Oyd type
+~ Used for dynamically sized arrays
+~ ********************************************
+
+class Vector is
+  data := new Oyd[4]
+  last := 0
+  alloc := 4
+
+  size(): int is
+  begin
+    size := last
+  end size
+
+  getData(): Oyd[] is
+  begin
+    getData := data
+  end getData
+
+  resize(allocSize: int) is
+  idx := 0
+  tmp := new Oyd[allocSize]
+  begin
+    loop while not (idx >= last)
+      tmp[idx] := data[idx]
+      idx := idx + 1
+    end loop
+
+    data := tmp
+  end resize
+
+  push_back(x: Oyd): Vector is
+  begin
+    if last >= alloc then
+      alloc := alloc * 2
+      resize(alloc)
+    end if
+    data[last] := x
+    last := last + 1
+    push_back := me
+  end push_back
+
+  init(newData: Oyd[]; newLast: int): Vector is
+  idx := 0
+  begin
+    loop while idx < newLast
+      push_back(newData[idx])
+      idx := idx + 1
+    end loop
+
+    init := me
+  end init
+
+  reserve(allocSize: int): Vector is
+  begin
+    last := 0
+    alloc := allocSize
+    data := new Oyd[alloc]
+
+    reserve := me
+  end reserve
+
+  copy(): Vector is
+  begin
+    copy := new Vector.init(data, last)
+  end copy
+
+  at(idx: int): Oyd is
+  begin
+    at := data[idx]
+  end at
+
+  insert(x: Vector): Vector is
+  idx := 0
+  last := x.size()
+  begin
+    loop while idx < last
+      push_back(x.at(idx))
+      idx := idx + 1
+    end loop
+
+    insert := me
+  end insert
+
+  partition(low: int; high: int): int is
+  pivot := data[high]
+  i := low - 1
+  j := low
+  tmp: Oyd
+  begin
+    loop while not (j > high - 1)
+      if not (data[j] > pivot) then
+        i := i + 1
+        tmp := data[i]
+        data[i] := data[j]
+        data[j] := tmp
+      end if
+      j := j + 1
+    end loop
+
+    tmp := data[i + 1]
+    data[i + 1] := data[high]
+    data[high] := tmp
+
+    partition := i + 1
+  end partition
+
+  quicksort(low: int; high: int): Vector is
+  pivot: int
+  begin
+    if not (low >= high) then
+      pivot := partition(low, high)
+      quicksort(low, pivot - 1)
+      quicksort(pivot + 1, high)
+    end if
+
+    quicksort := me
+  end quicksort
+
+  sort(): Vector is
+  begin
+    sort := quicksort(0, last - 1)
+  end sort
+end Vector
+
+~ ********************************************
+~ An implementation of the standard String class
+~ Uses an array to hold the characters
+~ ********************************************
+
+class String is
+  data := new IntVector
+
+  size(): int is
+  begin
+    size := data.size()
+  end size
+
+  length(): int is
+  begin
+    length := data.size()
+  end length
+
+  getData(): IntVector is
+  begin
+    getData := data
+  end getData
+
+  init(newData: IntVector): String is
+  begin
+    data := newData
+    init := me
+  end init
+
+  appendChar(ch: int): String is
+  begin
+    data.push_back(ch)
+    appendChar := me
+  end appendChar
+  
+  catIntHelper(num: int; str: String) is
+    digit: int
+  begin
+    digit := num - (num / 10)* 10  ~ compute num mod 10
+    if num / 10 > 0 then
+      catIntHelper(num / 10, str)
+    end if
+    str.appendChar(digit + 48)
+  end catIntHelper
+  
+  copy(): String is
+  begin
+    copy := new String.init(data.copy())
+  end copy
+     
+  cat(str: String): String is
+    newStr := copy()
+  begin
+    newStr.getData().insert(str.getData())
+    cat := newStr
+  end cat
+
+  _cat_(other: Oyd): Oyd is
+  tmp: String := other
+  begin
+    _cat_ := cat(tmp)
+  end _cat_
+    
+  catChar(ch: int): String is
+    newStr := copy()
+  begin
+    newStr.appendChar(ch)
+    catChar := newStr
+  end catChar
+  
+  catInt(num: int): String is  
+    result: String
+    i: int
+  begin        
+    if not (num = 0) then
+      result := new String    
+
+      if (0 > num) then
+        result.appendChar(45) ~ minus sign
+        num := -num
+      end if
+
+      ~ Append digits to result
+      catIntHelper(num, result)
+    else
+      result := (new String).catChar(48) ~ 0
+    end if
+  
+    catInt := cat(result)
+  end catInt
+
+  charAt(idx: int): int is
+  begin
+    if 0 > idx or idx >= size() then
+      charAt := -1
+    else
+      charAt := data.at(idx)
+    end if
+  end charAt
+  
+  ~ returns true if this string is lexicographically equal to <str>
+  eq(other: Oyd): boolean is
+    tmp: String := other
+    i := 0
+    len := length()
+  begin
+    if not (len = tmp.length()) then
+      eq := false
+    else
+      loop while not (i >= len) and (charAt(i) = tmp.charAt(i))
+        i := i + 1
+      end loop
+      eq := (i = len)
+    end if
+  end eq
+  
+  gt(str: String): boolean is
+    i := 0
+    len := length()
+  begin
+    loop while not (i >= len) and not (i >= str.length()) and (charAt(i) = str.charAt(i))
+      i := i + 1
+    end loop
+    if (i >= len) or (i >= str.length()) then
+      gt := len > str.length()
+    else
+      gt := (charAt(i) > str.charAt(i))
+    end if
+  end gt
+  
+  gteq(str: String): boolean is
+  begin
+    gteq := gt(str) or eq(str)
+  end gteq
+
+  _lt_(other: Oyd): boolean is
+  tmp: String := other
+  begin
+    _lt_ := not gteq(tmp)
+  end _lt_
+
+  toString(): String is
+  begin
+    toString := me
+  end toString
+
+  toInt(): int is
+  num := 0
+  mult := 1
+  idx := 0
+  begin
+    if idx < data.size() and data.at(idx) = 45 then
+      mult := -1
+      idx := idx + 1
+    end if
+
+    loop while idx < data.size()
+      num := num * 10 + (data.at(idx) - 48)
+      idx := idx + 1
+    end loop
+
+    toInt := num * mult
+  end toInt
+
+  find(other: String): int is
+  idx := 0
+  search := 0
+  found := false
+  begin
+    loop while not found and idx < size() - other.size()
+      search := 0
+      found := true
+      loop while found and search < other.size()
+        if charAt(idx + search) != other.charAt(search) then
+          found := false
+        end if
+        search := search + 1
+      end loop
+      idx := idx + 1
+    end loop
+
+    if found then
+      find := idx - 1 
+    else
+      find := -1
+    end if
+  end find
+
+  substring(pos: int; len: int): String is
+  res := new String
+  idx := 0
+  begin
+    res.getData().reserve(len)
+    loop while idx < len
+      res.appendChar(charAt(pos + idx))
+      idx := idx + 1
+    end loop
+
+    substring := res
+  end substring
+
+  split(): Vector is
+  res := new Vector
+  idx := 0
+  last := 0
+  begin
+    loop while idx < size()
+      if charAt(idx) = 32 then
+        if idx - last > 1 then
+          res.push_back(substring(last, idx - last))
+        end if
+
+        last := idx + 1
+      end if
+
+      idx := idx + 1
+    end loop 
+    if idx - last > 1 then
+      res.push_back(substring(last, idx - last))
+    end if
+
+    split := res
+  end split
+
+  join(data: Vector): String is
+  res := new String
+  idx := 0
+  begin
+    loop while idx < data.size() - 1
+      res := res & data.at(idx).toString() & " "
+      idx := idx + 1
+    end loop
+    if data.size() > 0 then
+      res := res & data.at(data.size() - 1).toString()
+    end if
+
+    join := res
+  end join
+
+  trim(): String is
+  start := 0
+  stop := size() - 1
+  begin
+    loop while start < size() and charAt(start) = 32
+      start := start + 1
+    end loop
+
+    loop while stop > 0 and charAt(stop) = 32
+      stop := stop - 1
+    end loop
+
+    if start = size() then
+      trim := ""
+    else
+      trim := substring(start, stop - start + 1)
+    end if
+  end trim
+
+  _mul_(other: Oyd): Oyd is
+  tmp: String := other
+  amt := tmp.toInt()
+  res := copy()
+  idx := 0
+  begin
+    res.getData().reserve(data.size() * amt)
+    loop while idx < amt
+      res.getData().insert(data)
+      idx := idx + 1
+    end loop
+
+    _mul_ := res
+  end _mul_
+end String
+
+
+~ ********************************************
+~ An implementation of the standard Writer class
+~
+~ This implementation depends on the existence of 
+~ an external function in the runtime support library:
+~  void io_write( )
+~ ********************************************
+
+class Writer is
+
+  ~ writes <char> to stdout 
+  writechar(char: int): Writer is
+  begin
+    io_write(char) 
+    writechar := me
+  end writechar
+
+
+  ~ internal method used by writeint
+  writeintHelper(num: int) is
+    digit: int
+  begin
+    digit := num - (num / 10)* 10  ~ compute num mod 10
+    if num / 10 > 0 then
+      writeintHelper(num / 10)
+    end if
+    io_write(digit + 48)      
+  end writeintHelper
+
+  ~ writes <num> to stdout. uses recursion but no Strings
+  writeint(num: int): Writer is
+  begin
+    if (num = 0) then
+      io_write(48)
+    else
+      if not (num >= 0) then
+        io_write(45) ~ - symbol
+        num := -num
+      end if
+      writeintHelper(num)
+    end if
+
+    io_write(13)
+    io_write(10)
+    
+    writeint := me
+  end writeint
+    
+  ~ writes <str> to stdout
+  write(str: String): Writer is
+    i := 0
+    len := str.length()
+  begin
+    loop while not (i >= len) 
+      io_write(str.charAt(i))
+      i := i + 1
+    end loop
+    
+    write := me
+  end write
+  
+  ~ writes <str> to stdout, followed by newline
+  writeln(str: String): Writer is
+  begin
+    write(str)
+    io_write(13)
+    io_write(10)
+    writeln := me
+  end writeln    
+
+  writeObject(o: Oyd) is
+  begin
+    write(o.toString())
+  end writeObject
+
+  writeVector(v: Vector; sep: String) is
+  idx := 0
+  begin
+    loop while idx < v.size() - 1
+      writeObject(v.at(idx))
+      write(sep)
+      idx := idx + 1
+    end loop
+    if v.size() > 0 then
+      writeObject(v.at(v.size() - 1))
+      write("\n")
+    end if
+  end writeVector
+
+  writeIntVector(v: IntVector; sep: String) is
+  idx := 0
+  begin
+    loop while idx < v.size() - 1
+      write(new String.catInt(v.at(idx)))
+      write(sep)
+      idx := idx + 1
+    end loop
+    if v.size() > 0 then
+      writeln(new String.catInt(v.at(v.size() - 1)))
+    end if
+  end writeIntVector
+end Writer
+
+
+~ ********************************************
+~ An implementation of the standard Reader class
+~
+~ This implementation depends on the existence of 
+~ an external function in the runtime support library:
+~  int io_read( )
+~ ********************************************
+
+class Reader is 
+
+  skipWS(): int is
+  char := io_read()
+  begin
+    loop while char = 10 or char = 13 or char = 32 or char = 8
+      char := io_read()
+    end loop
+    skipWS := char
+  end skipWS
+
+  readline(): String is
+    char := io_read()
+    s := new String
+  begin    
+    loop while not (char = 10)
+      if not (char = 13) then
+        s.appendChar(char)
+      end if
+      char := io_read()
+    end loop
+    
+    readline := s
+  end readline
+
+  read(): String is
+  char := skipWS()
+  s := new String
+  begin
+    loop while char != 10 and char != 13 and char != 32 and char != 8
+      s.appendChar(char)
+      char := io_read()
+    end loop
+
+    read := s
+  end read
+
+  readint(): int is
+    char := skipWS()
+    mult := 1
+    num := 0
+  begin
+    if char = 45 then
+      mult := -1
+      char := io_read() - 48
+    else
+      char := char - 48
+    end if
+
+    loop while char >= 0 and not (char >= 10)
+      num := num * 10 + char
+      char := io_read() - 48
+    end loop
+
+    readint := num * mult
+  end readint
+
+end Reader
+
+
+~ ********************************************
+~ An implementation of the Integer class
+~
+~ Used for object support (maps, Vectors)
+~ ********************************************
+
+class Integer is
+  _val := 0
+
+  init(newVal: int): Integer is
+  begin
+    _val := newVal
+    init := me
+  end init
+
+  toString(): String is
+  begin
+    toString := new String.catInt(_val)
+  end toString
+
+  val(): int is
+  begin
+    val := _val
+  end val
+
+  _lt_(other: Oyd): boolean is
+  tmp: Integer := other
+  begin
+    _lt_ := _val < tmp.val()
+  end _lt_
+
+  eq(other: Oyd): boolean is
+  tmp: Integer := other
+  begin
+    eq := _val = tmp.val()
+  end eq
+
+  _and_(other: Oyd): boolean is
+  tmp: Integer := other
+  begin
+    _and_ := _val != 0 and tmp.val() != 0
+  end _and_
+
+  _or_(other: Oyd): boolean is
+  tmp: Integer := other
+  begin
+    _or_ := _val != 0 or tmp.val() != 0
+  end _or_
+
+  _add_(other: Oyd): Oyd is
+  tmp: Integer := other
+  begin
+    _add_ := new Integer.init(_val + tmp.val())
+  end _add_
+
+  _sub_(other: Oyd): Oyd is
+  tmp: Integer := other
+  begin
+    _sub_ := new Integer.init(_val - tmp.val())
+  end _sub_
+
+  _mul_(other: Oyd): Oyd is
+  tmp: Integer := other
+  begin
+    _mul_ := new Integer.init(_val * tmp.val())
+  end _mul_
+
+  _div_(other: Oyd): Oyd is
+  tmp: Integer := other
+  begin
+    _div_ := new Integer.init(_val / tmp.val())
+  end _div_
+end Integer
+
+~ ********************************************
+~ An implementation of the Boolean class
+~
+~ Used for object support (maps, Vectors)
+~ ********************************************
+
+class Boolean is
+  _val := false
+
+  init(newVal: boolean): Boolean is
+  begin
+    _val := newVal
+    init := me
+  end init
+
+  val(): boolean is
+  begin
+    val := _val
+  end val
+
+  toString(): String is
+  begin
+    if _val then
+      toString := "true"
+    else
+      toString := "false"
+    end if
+  end toString
+
+  eq(other: Oyd): boolean is
+  tmp: Boolean := other
+  begin
+    eq := _val = tmp.val()
+  end eq
+end Boolean
+
+
+~ ********************************************
+~ An implementation of the Map class
+~ A binary tree of entries
+~ ********************************************
+
+class Map is
+  _left: Map
+  _right: Map
+  _key: Oyd
+  _value: Oyd
+
+  insert(newKey: Oyd; newValue: Oyd) is
+  begin
+    if newKey = null then
+    else
+    if _key = null then
+      _key := newKey
+      _value := newValue
+    else 
+    if newKey < _key then
+      if _left = null then
+        _left := new Map
+      end if
+      _left.insert(newKey, newValue)
+    else 
+    if newKey > _key then
+      if _right = null then
+        _right := new Map
+      end if
+      _right.insert(newKey, newValue)
+    else ~ Duplicate value, replace
+      _value := newValue
+    end if
+    end if
+    end if
+    end if
+  end insert
+
+  get(target: Oyd): Oyd is
+  begin
+    if _key = null or target = null then
+      get := null
+    else
+    if _key.eq(target) then
+      get := _value
+    else 
+    if target < _key then
+      if _left = null then
+        get := null
+      else
+        get := _left.get(target)
+      end if
+    else
+      if _right = null then
+        get := null
+      else
+        get := _right.get(target)
+      end if
+    end if
+    end if
+    end if
+  end get
+end Map
+
+
+~ ********************************************
+~ An implementation of a Mapper class
+~
+~ Used for calling functions on every element
+~ of an array and returning the results
+~ ********************************************
+
+class Mapper is
+  
+  ~ Expects a vector of strings to convert to ints
+  mapInt(data: Vector): IntVector is
+  res := new IntVector.reserve(data.size())
+  idx := 0
+  tmp: String
+  begin
+    loop while idx < data.size()
+      tmp := data.at(idx)
+      res.push_back(tmp.toInt())
+      idx := idx + 1
+    end loop
+
+    mapInt := res
+  end mapInt
+
+  mapInteger(data: Vector): Vector is
+  res := new Vector.reserve(data.size())
+  idx := 0
+  tmp: String
+  begin
+    loop while idx < data.size()
+      tmp := data.at(idx)
+      res.push_back(new Integer.init(tmp.toInt()))
+      idx := idx + 1
+    end loop
+
+    mapInteger := res
+  end mapInteger
+
+end Mapper

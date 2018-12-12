@@ -1,0 +1,29 @@
+class Vehicle is
+	miles: int
+
+	getMiles(): int is
+	begin
+		getMiles := miles
+	end getMiles
+
+	getDesc(): String is
+	begin
+		getDesc := "(Mileage) = ".catInt(miles)
+	end getDesc
+end Vehicle
+
+class Car inherits from Vehicle is
+	model: String
+
+	getDesc(): String is
+	begin
+		getDesc := "(Model, Mileage) = ".cat(model & ", ").catInt(getMiles())
+	end getDesc
+end Car
+
+class Main is
+	start() is
+	begin
+
+	end start
+end Main

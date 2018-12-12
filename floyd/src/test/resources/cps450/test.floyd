@@ -1,0 +1,13 @@
+~ This comment should not be read in
+class Chicken is
+    name: string    ~ The chicken's name
+    _id2: int       ~ Another identifier
+
+    eat() is
+    begin
+        print("My name is " & name & "! \333\r\n\t\f")
+        -55
+    end
+end
+"\w"
+"Oops

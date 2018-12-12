@@ -1,0 +1,59 @@
+class MyInt is
+	_val: String
+
+	val(): String is
+	begin
+		val := _val
+	end val
+
+	size(): int is
+	begin
+		size := _val.size()
+	end size
+
+	init(newVal: String): MyInt is
+	begin
+		_val := newVal
+		init := me
+	end init
+
+	eq(other: Oyd): boolean is
+	tmp: MyInt := other
+	begin
+		eq := _val.eq(tmp.val())
+	end eq
+
+	_lt_(other: Oyd): boolean is
+	tmp: MyInt := other
+	begin
+		if size() != tmp.size() then
+			_lt_ := size() < tmp.size()
+		else
+			_lt_ := _val < tmp.val()
+		end if
+	end _lt_
+
+	toString(): String is
+	begin
+		toString := _val
+	end toString
+
+end MyInt
+
+class Sort is
+
+	start() is
+	n := in.readint()
+	data := new Vector
+	begin
+		loop while n > 0
+			data.push_back(new MyInt.init(in.read()))
+			n := n - 1
+		end loop
+
+		data.sort()
+
+		out.writeVector(data, "\n")
+	end start
+
+end Sort

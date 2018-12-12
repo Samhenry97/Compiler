@@ -1,0 +1,19 @@
+class Banana inherits from Fruit is
+	name: string := "Hello world!"
+	age: int := 55
+
+	toString(x: int; y: bool): string is
+		z: string := "Test String"
+		begin
+			x := 1 + x.foo()
+			x[5][2 + 3]["hi"] := (2 + 2 * 3) / 44 - -55
+			if x > 3 and y > 2 then
+				print("Hello world!")
+				(new Banana).print(hello(x / 3).hi(2 + 2))
+				loop while x > 2
+					print("hi")
+				end loop
+			end if
+		end toString
+
+end Banana

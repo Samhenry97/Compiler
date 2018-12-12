@@ -1,0 +1,74 @@
+class Main inherits from Blah is 	~ Inheritance
+	x: int := 5			~ Initializer expression
+	y: int[]			~ Arrays unsupported
+	y := 4				~ Redeclaration, type required
+	y: bob
+	
+	start(): int is
+	local: int := -5	~ Initializer expression
+	begin
+		unknown()		~ Undeclared method
+		z := m * n		~ 3 undeclared variables
+	end start
+
+	~ Unsupported: other than start()
+	assignment(x: int; y: boolean): boolean is	
+	x: int 		~ Redeclaration of variable in scope
+	begin
+		x := me
+		x := null
+		(new Reader).whatever()		~ new [type] unsupported
+		x[0] := x[1]				~ Arrays on either side unsupported
+		x := 5 + 2 * 3				~ Legal
+		x := 5 > 3					~ bool vs int
+		x := "hi"					~ string vs int, string unsupported
+	end another
+
+	~ Unsupported: other than start()
+	conditional() is
+	begin
+		if 5 then	~ bool required
+		end if
+
+		loop while "hi"		~ bool required, string unsupported
+		end loop
+
+		conditional := 5
+	end conditional
+
+	~ Unsupported: other than start()
+	typechecks() is
+	s: string
+	x: int
+	y: int
+	t: boolean
+	begin
+		s := x & s 			~ & requires strings
+		t := x > s 			~ both types must be same
+		t := t > t 			~ int or string
+		t := t = x			~ both types must be same
+		x := x + t 			~ require int
+		x := x * t 			~ require int
+		x := +false 		~ unary +/- requires int
+		x := not 5			~ unary not requires bool
+		t := true or x		~ or requires bool
+		t := true and x		~ and requires bool
+	end typechecks
+
+	~ Unsupported: other than start()
+	methodchecks() is
+	begin
+		assignment()		~ 0, 2 expected
+		assignment(x)		~ 1, 2 expected
+		assignment(x, true)	~ valid
+		assignment(true, x) ~ int expected for parameter 1
+		x.hi()
+	end methodchecks
+end Main
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class TooMany is  ~ Only 1 class allowed
+	
+end TooMany

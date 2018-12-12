@@ -1,0 +1,30 @@
+class Main is
+	data := new Map
+
+	start() is
+	inp: String
+	val: String
+	begin
+		out.writeln("Enter key and value pairs (\"stop\" to finish): ")
+		inp := in.read()
+		loop while inp.neq("stop")
+			val := in.read()
+			data.insert(inp, val)
+
+			inp := in.read()
+		end loop
+
+		out.writeln("")
+		out.writeln("Enter keys to access values (\"stop\" to finish): ")
+		inp := in.read()
+		loop while inp.neq("stop")
+			val := data.get(inp)
+			if val = null then
+				out.writeln("Key \"" & inp & "\" does not exist!")
+			else
+				out.writeln("Key: \"" & inp & "\"; Value: \"" & val & "\"")
+			end if
+			inp := in.read()
+		end loop
+	end start
+end Main

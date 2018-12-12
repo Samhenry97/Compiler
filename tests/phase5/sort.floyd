@@ -1,0 +1,23 @@
+class Sort is
+	data := new IntVector
+
+	start() is
+	inp: int
+	idx: int
+	begin
+		out.writeln("Enter integers to sort (-1 to stop): ")
+		inp := in.readint()
+		loop while not (inp = -1)
+			data.push_back(inp)
+			inp := in.readint()
+		end loop
+
+		data.sort()
+		out.writeln("Sorted Data: ")
+		loop while idx < data.size()
+			out.writeint(data.at(idx))
+			idx := idx + 1
+		end loop
+		out.writeln("DONE!!!")
+	end start
+end Sort

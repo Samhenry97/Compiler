@@ -1,0 +1,53 @@
+~ Prime Checker for CpS 450
+~ Written by Sam Henry
+~ Phase 4 comprehensive test
+
+class Prime is
+	x: int
+	div: int
+	good: boolean
+
+	start() is
+	begin
+		x := in.readint()
+		loop while not (x = 0)
+			good := true
+
+			~ x <= 1
+			if not (x > 1) then
+				good := false
+			else 
+
+			~ x <= 3
+			if not (x > 3) then
+				good := true
+			else 
+
+			~ x % 2 == 0 or x % 3 == 0
+			if (x - (x / 2) * 2) = 0 or (x - (x / 3) * 3) = 0 then
+				good := false
+			else
+				~ Check the rest with brute force
+				div := 5
+				loop while not(div * div >= x)
+					if (x - (x / div) * div) = 0 or (x - (x / (div + 2)) * (div + 2)) = 0 then
+						good := false
+					end if
+					div := div + 6
+				end loop
+			end if
+			end if
+			end if
+
+			~ Did it pass?
+			if good then
+				out.writeint(1)
+			else
+				out.writeint(0)
+			end if
+
+			x := in.readint()
+		end loop
+	end start
+
+end Prime
